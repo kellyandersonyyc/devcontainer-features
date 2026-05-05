@@ -1,6 +1,6 @@
 {
   "id": "ai-tools",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "name": "AI CLI tools",
   "description": "Installs Claude Code, OpenAI Codex, and Happy globally. Mounts persistent config volumes for each tool and bind-mounts the shared agents/skills directory from the host. Persists ~/.claude.json (onboarding state, project trust, MCP config) by symlinking into the .claude volume.",
   "mounts": [
