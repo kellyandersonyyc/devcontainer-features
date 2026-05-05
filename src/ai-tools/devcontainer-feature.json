@@ -7,8 +7,9 @@
     { "source": "atlas-claude-config", "target": "/home/node/.claude", "type": "volume" },
     { "source": "atlas-codex-config", "target": "/home/node/.codex", "type": "volume" },
     { "source": "atlas-happy-config", "target": "/home/node/.happy", "type": "volume" },
-    "source=/mnt/user/files/3 - Resources/AI/agents,target=/home/node/agents,type=bind,readonly",
-    "source=/mnt/user/files/3 - Resources/AI/agents/skills,target=/home/node/.claude/skills,type=bind,readonly",
-    "source=/mnt/user/files/3 - Resources/AI/agents/skills,target=/home/node/.codex/skills,type=bind,readonly"
+    { "source": "/mnt/user/files/3 - Resources/AI/agents", "target": "/home/node/agents", "type": "bind" },
+    { "source": "/mnt/user/files/3 - Resources/AI/agents/skills", "target": "/home/node/.claude/skills", "type": "bind" },
+    { "source": "/mnt/user/files/3 - Resources/AI/agents/skills", "target": "/home/node/.codex/skills", "type": "bind" }
+	
   ]
 }
