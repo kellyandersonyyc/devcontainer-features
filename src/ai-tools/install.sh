@@ -14,12 +14,34 @@ set -e
 
 USER_NAME="$TARGET_USER"
 USER_HOME="$TARGET_HOME"
+VOLUME_DIR="/home/node/.claude"
 
 for dir in /home/node/.claude /home/node/.codex /home/node/.happy; do
   [ -d "\$dir" ] || continue
   find "\$dir" \\( -path "\$dir/skills" \\) -prune \\
     -o -exec chown -h "\$USER_NAME:\$USER_NAME" {} + 2>/dev/null || true
 done
+
+PERSISTED_HOME_DIR="\$VOLUME_DIR/_persisted"
+mkdir -p "\$PERSISTED_HOME_DIR"
+PERSISTED_CLAUDE_JSON="\$PERSISTED_HOME_DIR/.claude.json"
+LIVE_CLAUDE_JSON="\$USER_HOME/.claude.json"
+
+if [ ! -e "\$PERSISTED_CLAUDE_JSON" ]; then
+  if [ -f "\$LIVE_CLAUDE_JSON" ] && [ ! -L "\$LIVE_CLAUDE_JSON" ]; then
+    mv "\$LIVE_CLAUDE_JSON" "\$PERSISTED_CLAUDE_JSON"
+  else
+    echo '{}' > "\$PERSISTED_CLAUDE_JSON"
+  fi
+fi
+
+if [ ! -L "\$LIVE_CLAUDE_JSON" ] || [ "\$(readlink "\$LIVE_CLAUDE_JSON")" != "\$PERSISTED_CLAUDE_JSON" ]; then
+  rm -f "\$LIVE_CLAUDE_JSON"
+  ln -s "\$PERSISTED_CLAUDE_JSON" "\$LIVE_CLAUDE_JSON"
+fi
+
+chmod 600 "\$PERSISTED_CLAUDE_JSON" 2>/dev/null || true
+chown -h "\$USER_NAME:\$USER_NAME" "\$PERSISTED_CLAUDE_JSON" "\$LIVE_CLAUDE_JSON" "\$PERSISTED_HOME_DIR" 2>/dev/null || true
 
 if [ -d "\$USER_HOME" ] && [ "\$USER_HOME" != "/home/node" ]; then
   for name in .claude .codex .happy; do
