@@ -1,15 +1,17 @@
 {
   "id": "ai-tools",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "name": "AI CLI tools",
-  "description": "Installs Claude Code, OpenAI Codex, and Happy globally. Mounts persistent config volumes for each tool and bind-mounts the shared agents/skills directory from the host. Persists ~/.claude.json (onboarding state, project trust, MCP config) by symlinking into the .claude volume.",
+  "description": "Installs Claude Code, OpenAI Codex, and Happy globally. Mounts persistent config volumes for each tool and bind-mounts a shared agent bundle (skills, subagents, lib) from the host: the full bundle at ~/.agents, with skills and subagents also surfaced into each tool's config dir (~/.claude, ~/.codex). Skills reference shared resources via ~/.agents/lib. Persists ~/.claude.json (onboarding state, project trust, MCP config) by symlinking into the .claude volume.",
   "mounts": [
     { "source": "atlas-claude-config", "target": "/home/node/.claude", "type": "volume" },
     { "source": "atlas-codex-config", "target": "/home/node/.codex", "type": "volume" },
     { "source": "atlas-happy-config", "target": "/home/node/.happy", "type": "volume" },
-    { "source": "/mnt/user/files/3 - Resources/AI/agents", "target": "/home/node/agents", "type": "bind" },
+    { "source": "/mnt/user/files/3 - Resources/AI/agents", "target": "/home/node/.agents", "type": "bind" },
     { "source": "/mnt/user/files/3 - Resources/AI/agents/skills", "target": "/home/node/.claude/skills", "type": "bind" },
-    { "source": "/mnt/user/files/3 - Resources/AI/agents/skills", "target": "/home/node/.codex/skills", "type": "bind" }
+    { "source": "/mnt/user/files/3 - Resources/AI/agents/skills", "target": "/home/node/.codex/skills", "type": "bind" },
+    { "source": "/mnt/user/files/3 - Resources/AI/agents/agents", "target": "/home/node/.claude/agents", "type": "bind" },
+    { "source": "/mnt/user/files/3 - Resources/AI/agents/agents", "target": "/home/node/.codex/agents", "type": "bind" }
   ],
   "entrypoint": "/usr/local/share/ai-tools/entrypoint.sh"
 }
